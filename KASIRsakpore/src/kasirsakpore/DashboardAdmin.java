@@ -6,6 +6,9 @@ package kasirsakpore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.Timer;
+import java.util.Locale;
+
 
 /**
  *
@@ -17,15 +20,20 @@ public class DashboardAdmin extends javax.swing.JFrame {
      * Creates new form DashboardAdmin
      */
     public DashboardAdmin() {
-        initComponents();
-    }
-    
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {
-    SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy");
-    Date tanggalSekarang = new Date();
-    String tanggalFormatted = sdf.format(tanggalSekarang);
-    lblTanggal.setText(tanggalFormatted);
+    initComponents();
+    setTanggal(); // Harus dipanggil setelah initComponents
 }
+
+    
+    private void setTanggal() {
+    Timer timer = new Timer(1000, e -> {
+        Date now = new Date(); // Ambil dari sistem
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
+        lblTanggal.setText(sdf.format(now));
+    });
+    timer.start();
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,6 +46,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         lblTanggal = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
 
@@ -47,8 +56,9 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logosakpore-small.png"))); // NOI18N
 
-        lblTanggal.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
-        lblTanggal.setText("Senin, 22 September 2025");
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logologin-removebg-preview-resize.png"))); // NOI18N
+
+        lblTanggal.setText("Rabu, 10 September 2025");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -57,17 +67,22 @@ public class DashboardAdmin extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 472, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 504, Short.MAX_VALUE)
                 .addComponent(lblTanggal)
-                .addGap(181, 181, 181))
+                .addGap(42, 42, 42)
+                .addComponent(jLabel2)
+                .addGap(130, 130, 130))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
                     .addComponent(jLabel1)
-                    .addComponent(lblTanggal))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(lblTanggal)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -98,8 +113,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(326, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -142,6 +156,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblTanggal;
