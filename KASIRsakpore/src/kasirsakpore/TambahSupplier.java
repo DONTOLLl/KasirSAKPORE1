@@ -355,7 +355,7 @@ public class TambahSupplier extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(1).setMaxWidth(400);
         }
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 130, 890, 420));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 130, 890, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
