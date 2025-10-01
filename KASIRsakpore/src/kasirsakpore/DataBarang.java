@@ -111,6 +111,9 @@ public class DataBarang extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
+        }
 
         jLabel1.setText("207");
 
