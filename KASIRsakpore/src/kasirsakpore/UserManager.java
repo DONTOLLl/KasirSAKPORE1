@@ -20,7 +20,7 @@ public class UserManager extends javax.swing.JFrame {
 
 
     }
-    
+        
 private void setTanggal() {
     java.time.LocalDate today = java.time.LocalDate.now();
     java.time.format.DateTimeFormatter formatter = 
