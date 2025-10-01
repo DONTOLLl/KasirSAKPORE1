@@ -167,10 +167,10 @@ private String currentUserLevel;
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logologin-removebg-preview-resize.png"))); // NOI18N
 
-        lblTanggal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTanggal.setFont(new java.awt.Font("GeoSlab703 Md BT", 0, 24)); // NOI18N
         lblTanggal.setText("Rabu, 10 September 2025");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("GeoSlab703 Md BT", 0, 18)); // NOI18N
         jLabel3.setText("Admin");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -182,29 +182,29 @@ private String currentUserLevel;
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTanggal)
-                .addGap(45, 45, 45)
+                .addGap(59, 59, 59)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addGap(81, 81, 81))
+                .addGap(67, 67, 67))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addComponent(lblTanggal))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jLabel3)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                        .addGap(34, 34, 34)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(31, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(45, 45, 45))
         );
 
         jPanel1.setBackground(new java.awt.Color(161, 194, 189));
@@ -592,6 +592,19 @@ private String currentUserLevel;
 
     private void btnUserManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserManagerActionPerformed
         // TODO add your handling code here:
+        UserManager userManagerForm = new UserManager();
+    
+    // 2. Tampilkan form tujuan
+    userManagerForm.setVisible(true);
+    
+    // 3. Sembunyikan form DashboardAdmin saat ini
+    // Agar form ini tidak hilang dari memori (untuk kembali lagi), 
+    // kita gunakan dispose() setelah semua form ditutup. 
+    // Tapi, untuk berpindah form, kita bisa menggunakan:
+    this.dispose(); // Menutup frame saat ini dan membebaskan sumber daya
+    
+    // CATATAN: Jika Anda ingin tetap membuka DashboardAdmin di belakang, 
+    // gunakan: this.setVisible(false);
     }//GEN-LAST:event_btnUserManagerActionPerformed
 
     private void btnSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierActionPerformed
