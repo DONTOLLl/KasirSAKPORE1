@@ -592,10 +592,10 @@ private String currentUserLevel;
 
     private void btnUserManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserManagerActionPerformed
         // TODO add your handling code here:
-        UserManager userManagerForm = new UserManager();
+//        UserManager userManagerForm = new UserManager();
     
     // 2. Tampilkan form tujuan
-    userManagerForm.setVisible(true);
+//    userManagerForm.setVisible(true);
     
     // 3. Sembunyikan form DashboardAdmin saat ini
     // Agar form ini tidak hilang dari memori (untuk kembali lagi), 

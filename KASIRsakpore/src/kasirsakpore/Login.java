@@ -66,7 +66,7 @@ private void handleLoginSuccess(String userLevel) {
         setBackground(new java.awt.Color(255, 255, 255));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(109, 148, 197));
+        jPanel1.setBackground(new java.awt.Color(125, 115, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnLogin.setBackground(new java.awt.Color(161, 194, 189));
