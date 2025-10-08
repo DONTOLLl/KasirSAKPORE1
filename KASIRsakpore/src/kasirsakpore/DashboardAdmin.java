@@ -40,6 +40,26 @@ private String currentUserLevel;
         setTanggal();
         checkAccess(); 
     }
+    
+    public void performLogout() {
+    // 1. Membersihkan Sesi (PENTING, jika ada)
+    // Jika Anda menyimpan data pengguna di variabel statis atau SessionManager, hapus di sini.
+    // Contoh: SessionManager.clearUserData();
+    
+    // 2. Menutup Jendela Dashboard Saat Ini
+    // 'this' merujuk pada JFrame DashboardAdmin saat ini
+    this.dispose(); 
+    
+    // 3. Menampilkan Halaman Login
+    // Asumsikan kelas Login Anda bernama 'Login'
+    try {
+        Login loginFrame = new Login();
+        loginFrame.setVisible(true);
+    } catch (Exception e) {
+        // Tangani jika ada masalah saat memuat halaman Login
+        e.printStackTrace();
+    }
+}
 
     // --- LOGIC KONTROL AKSES ---
 
@@ -123,6 +143,7 @@ private String currentUserLevel;
         jLabel2 = new javax.swing.JLabel();
         lblTanggal = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -173,6 +194,14 @@ private String currentUserLevel;
         jLabel3.setFont(new java.awt.Font("GeoSlab703 Md BT", 0, 18)); // NOI18N
         jLabel3.setText("Admin");
 
+        btnLogout.setBackground(new java.awt.Color(161, 194, 189));
+        btnLogout.setText("LOGOUT");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -185,8 +214,10 @@ private String currentUserLevel;
                 .addGap(59, 59, 59)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addGap(67, 67, 67))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(btnLogout))
+                .addGap(46, 46, 46))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,7 +235,9 @@ private String currentUserLevel;
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel3)
-                .addGap(45, 45, 45))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnLogout)
+                .addGap(16, 16, 16))
         );
 
         jPanel1.setBackground(new java.awt.Color(161, 194, 189));
@@ -631,6 +664,11 @@ private String currentUserLevel;
         // TODO add your handling code here:
     }//GEN-LAST:event_btnLaporanPenjualanActionPerformed
 
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+        performLogout();
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -671,6 +709,7 @@ private String currentUserLevel;
     private javax.swing.JButton btnKategori;
     private javax.swing.JButton btnLaporanPenjualan;
     private javax.swing.JButton btnLaporanTransaksi;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnSupplier;
     private javax.swing.JButton btnTransaksi;
     private javax.swing.JButton btnUserManager;
