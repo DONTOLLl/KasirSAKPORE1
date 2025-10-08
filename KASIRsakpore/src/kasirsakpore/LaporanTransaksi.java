@@ -32,9 +32,7 @@ public class LaporanTransaksi extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
-        jDateChooser3 = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -87,12 +85,10 @@ public class LaporanTransaksi extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         jLabel2.setText("Dari :");
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
-        jPanel2.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 12, 230, 30));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 300, 50));
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel3.add(jDateChooser3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 223, 30));
 
         jLabel3.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         jLabel3.setText("Sampai :");
@@ -139,8 +135,6 @@ public class LaporanTransaksi extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.toedter.calendar.JDateChooser jDateChooser2;
-    private com.toedter.calendar.JDateChooser jDateChooser3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
