@@ -1,8 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package kasirsakpore;
+
+// Import yang dibutuhkan untuk Tanggal dan Waktu
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -10,13 +11,37 @@ package kasirsakpore;
  */
 public class DataBarang extends javax.swing.JFrame {
 
+    // VARIABEL GLOBAL: Simpan username yang sedang aktif di sini
+    // Variabel ini harus diatur nilainya (di-set) dari class Login setelah login berhasil.
+    public static String loggedInUsername = "Admin"; 
+    
     /**
      * Creates new form DataBarang
      */
     public DataBarang() {
         initComponents();
+        // Panggil metode untuk mengatur tanggal dan username saat form dibuat
+        setDateTimeAndUser(); 
     }
 
+    // Metode baru untuk mengatur tanggal dan pengguna
+    private void setDateTimeAndUser() {
+        // --- 1. SET TANGGAL OTOMATIS ---
+        
+        // Format tanggal: Hari, dd Bulan YYYY (menggunakan locale Indonesia)
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
+        Date now = new Date();
+        
+        // Atur teks jLabel4 (Tanggal)
+        jLabel4.setText(sdf.format(now));
+        
+        // --- 2. SET USERNAME OTOMATIS ---
+        
+        // Atur teks jLabel5 (Username/Admin)
+        jLabel5.setText(loggedInUsername);
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,8 +68,9 @@ public class DataBarang extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setBackground(new java.awt.Color(161, 194, 189));
-        jButton1.setText("Refresh");
+        // MODIFIKASI: Warna tombol Refresh diubah menjadi hijau muda dan teks disesuaikan
+        jButton1.setBackground(new java.awt.Color(185, 222, 175));
+        jButton1.setText("Refresh Data");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -59,22 +85,31 @@ public class DataBarang extends javax.swing.JFrame {
 
         jLabel2.setText("Total");
 
-        panel2.setBackground(new java.awt.Color(109, 148, 197));
+        // MODIFIKASI: Warna panel header (panel2) diubah menjadi Teal gelap
+        panel2.setBackground(new java.awt.Color(47, 105, 109));
 
-        jLabel3.setText("DataBarang");
+        // MODIFIKASI: Teks, warna dan font header (jLabel3) disesuaikan
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // Lebih besar dan tebal
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255)); // Teks Putih
+        jLabel3.setText("Data Barang"); // Memperbaiki spasi
 
-        jLabel4.setText("Rabu,10 September 2025");
+        // MODIFIKASI: Warna teks tanggal (jLabel4) diubah menjadi putih
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        // Teks awal hanya placeholder, akan diisi otomatis oleh setDateTimeAndUser()
 
+        // MODIFIKASI: Warna teks Admin (jLabel5) diubah menjadi putih
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logologin-removebg-preview-resize.png"))); // NOI18N
-        jLabel5.setText("admin");
+        // Teks awal hanya placeholder, akan diisi otomatis oleh setDateTimeAndUser()
 
         javax.swing.GroupLayout panel2Layout = new javax.swing.GroupLayout(panel2);
         panel2.setLayout(panel2Layout);
         panel2Layout.setHorizontalGroup(
             panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 580, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addGap(56, 56, 56)
                 .addComponent(jLabel5)
@@ -91,8 +126,9 @@ public class DataBarang extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton2.setBackground(new java.awt.Color(161, 194, 189));
-        jButton2.setText("Tambahkan Barang");
+        // MODIFIKASI: Warna tombol Tambah diubah menjadi biru dan teks disesuaikan
+        jButton2.setBackground(new java.awt.Color(109, 148, 197));
+        jButton2.setText("Tambah Barang");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -114,62 +150,60 @@ public class DataBarang extends javax.swing.JFrame {
 
         jLabel1.setText("207");
 
-        jLabel6.setText("Rp321.900");
+        jLabel6.setText("Rp321.900,-"); // Menambahkan koma sesuai desain
 
-        jLabel7.setText("Rp551.00");
+        jLabel7.setText("Rp551.000,-"); // Menambahkan koma sesuai desain
 
-        jLabel8.setText("Search");
+        jLabel8.setText("Search:"); // Menambahkan titik dua
 
+        // MODIFIKASI: GroupLayout disesuaikan agar cocok dengan desain
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addGap(334, 334, 334)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel2)
-                        .addGap(32, 32, 32)
+                        .addGap(309, 309, 309) // Penyesuaian jarak total
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel7)))
-                .addContainerGap(438, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 885, Short.MAX_VALUE)
-                    .addComponent(panel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jLabel7))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jButton2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
                     .addComponent(jButton2)
+                    .addComponent(jButton1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
