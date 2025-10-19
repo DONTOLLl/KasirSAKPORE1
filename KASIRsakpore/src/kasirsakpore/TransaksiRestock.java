@@ -36,23 +36,24 @@ public class TransaksiRestock extends javax.swing.JFrame {
 
     // --- CONSTRUCTORS ---
 
-    
+    // TEMPORARY FIX: Constructor 4-argumen untuk mengatasi error kompilasi DataBarang
+    public TransaksiRestock(JFrame parent, String initialKode, String initialNama, String placeholder) {
+        // Panggil constructor 3-argumen yang menerima initial item
+        this(parent, initialKode, initialNama); 
+    }
     
     // Constructor 1: Default (untuk Testing/NetBeans Designer)
     public TransaksiRestock() {
-        this(null, null, null, null);
+        this(null, null, null);
     }
     
     // Constructor 2: Dipanggil dari Dashboard/Menu (Transaksi Kosong)
     public TransaksiRestock(JFrame parent) {
-        this(parent, null, null, null);
+        this(parent, null, null);
     }
-
-    /**
-     * Constructor 3: Dipanggil dari DataBarang (Pre-filled Item).
-     * Menerima initialKode, initialNama, dan initialSupplier
-     */
-    public TransaksiRestock(JFrame parent, String initialKode, String initialNama, String initialSupplier) {
+    
+    // Constructor 3: Dipanggil dari DataBarang (Pre-filled Item).
+    public TransaksiRestock(JFrame parent, String initialKode, String initialNama) {
         this.parentFrame = parent;
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -62,6 +63,9 @@ public class TransaksiRestock extends javax.swing.JFrame {
         setTanggalOtomatis();
         setupEscapeKey();
         
+        // Panggil loadSuppliers di awal untuk mengisi JComboBox
+        loadSuppliers();
+        
         txtIDRestock.setText("TRSTK-AUTO"); 
         
         // LOGIKA PENGISIAN FIELD INPUT
@@ -69,13 +73,8 @@ public class TransaksiRestock extends javax.swing.JFrame {
             txtKodeBarang.setText(initialKode);
             txtNamaBarang.setText(initialNama);
             
-            // MODIFIKASI: Mengisi Nama Supplier
-            if (initialSupplier != null) {
-                txtNamaSupplier.setText(initialSupplier);
-            } else {
-                // Jika supplier tidak dikirim dari DataBarang, coba ambil dari DB
-                muatDataBarang(); 
-            }
+            // Logika pengisian supplier akan ditangani oleh muatDataBarang()
+            muatDataBarang(); 
             
             txtJmlRestock.requestFocus();
         } else {
@@ -104,9 +103,6 @@ public class TransaksiRestock extends javax.swing.JFrame {
         txtTanggal.setText(tanggalSekarang);
     }
     
-    /**
-     * MODIFIKASI: Tambah kolom "Nama Supplier" di tabel.
-     */
     private void setupTable() {
         modelTabelRestock = new DefaultTableModel();
         modelTabelRestock.addColumn("Kode Barang");
@@ -116,21 +112,51 @@ public class TransaksiRestock extends javax.swing.JFrame {
         jTableRestock.setModel(modelTabelRestock);
     }
     
+    /**
+     * Metode untuk memuat daftar supplier dari database ke JComboBox.
+     * ASUMSI: Ada tabel 'supplier' dengan kolom 'nama_supplier'.
+     */
+    private void loadSuppliers() {
+        // Hapus item lama dan tambahkan placeholder
+        cmbNamaSupplier.removeAllItems(); 
+        cmbNamaSupplier.addItem("- Pilih Supplier -"); 
+
+        try {
+            // QUERY: SELECT nama_supplier DARI TABEL supplier
+            String sql = "SELECT nama_supplier FROM supplier ORDER BY nama_supplier ASC";
+            Connection conn = KoneksiDB.getKoneksi();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                cmbNamaSupplier.addItem(rs.getString("nama_supplier"));
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            // Pesan error ini tidak akan menghentikan program, hanya memberi tahu jika load gagal.
+            System.err.println("Gagal memuat daftar Supplier: " + e.getMessage());
+        }
+    }
+    
     // --- LOGIKA MENCARI BARANG ---
     
     /**
-     * MODIFIKASI: Mengambil nama supplier bersama nama barang.
-     * ASUMSI: Nama supplier disimpan di kolom `nama_supplier` pada tabel `barang`.
+     * Mengambil nama barang dan nama supplier default/terakhir 
+     * dan memilihnya di JComboBox.
+     * ASUMSI: Tabel `barang` memiliki kolom `nama_supplier`.
      */
     private void muatDataBarang() {
         String kode = txtKodeBarang.getText().trim();
         if (kode.isEmpty()) return;
         
         // Kosongkan field supplier sebelum memuat
-        txtNamaSupplier.setText("");
+        cmbNamaSupplier.setSelectedItem("- Pilih Supplier -");
         
         try {
-            // MODIFIKASI QUERY: Tambahkan kolom nama_supplier
+            // QUERY: Ambil nama barang dan nama supplier
             String sql = "SELECT nama_barang, nama_supplier FROM barang WHERE kode_barang = ?";
             Connection conn = KoneksiDB.getKoneksi();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -140,7 +166,16 @@ public class TransaksiRestock extends javax.swing.JFrame {
             
             if (rs.next()) {
                 txtNamaBarang.setText(rs.getString("nama_barang")); 
-                txtNamaSupplier.setText(rs.getString("nama_supplier")); // ISI NAMA SUPPLIER
+                
+                // Pilih Nama Supplier di ComboBox
+                String supplierName = rs.getString("nama_supplier");
+                if (supplierName != null && !supplierName.isEmpty()) {
+                    // Mencari dan memilih item di ComboBox. 
+                    // Jika nama_supplier di database tidak ada di daftar ComboBox, 
+                    // item tidak akan terpilih.
+                    cmbNamaSupplier.setSelectedItem(supplierName); 
+                }
+                
                 txtJmlRestock.requestFocus(); 
             } else {
                 JOptionPane.showMessageDialog(this, "Kode Barang tidak ditemukan.", "Peringatan", JOptionPane.WARNING_MESSAGE);
@@ -159,16 +194,26 @@ public class TransaksiRestock extends javax.swing.JFrame {
     // --- LOGIKA TAMBAH KE TABEL SEMENTARA ---
     
     /**
-     * MODIFIKASI: Menyimpan nama supplier ke tabel sementara.
+     * Mengambil data dari field input, termasuk supplier dari JComboBox, dan menambahkannya ke tabel.
      */
     private void tambahKeTabel() {
         String kode = txtKodeBarang.getText().trim();
         String nama = txtNamaBarang.getText().trim();
-        String supplier = txtNamaSupplier.getText().trim(); // AMBIL DATA SUPPLIER
+        
+        // AMBIL DATA SUPPLIER DARI COMBOBOX
+        String supplier = (String) cmbNamaSupplier.getSelectedItem(); 
+        
+        // Cek validasi untuk Supplier
+        if (supplier == null || supplier.equals("- Pilih Supplier -")) {
+             JOptionPane.showMessageDialog(this, "Silakan pilih Nama Supplier dari daftar.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+             cmbNamaSupplier.requestFocus();
+             return;
+        }
+        
         int jumlah;
 
-        if (kode.isEmpty() || nama.isEmpty() || supplier.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Kode, Nama Barang, atau Nama Supplier tidak valid. Tekan Enter setelah mengisi Kode Barang.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        if (kode.isEmpty() || nama.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Kode atau Nama Barang tidak valid.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
@@ -207,21 +252,17 @@ public class TransaksiRestock extends javax.swing.JFrame {
     }
     
     /**
-     * MODIFIKASI: Bersihkan field txtNamaSupplier
+     * Membersihkan field input restock.
      */
     private void bersihkanInputRestock() {
         txtKodeBarang.setText("");
         txtNamaBarang.setText("");
-        txtNamaSupplier.setText(""); // BERSIHKAN FIELD SUPPLIER
+        cmbNamaSupplier.setSelectedItem("- Pilih Supplier -"); // RESET COMBOBOX
         txtJmlRestock.setText("1");
         txtKodeBarang.requestFocus();
     }
     
-    // --- LOGIKA SIMPAN TRANSAKSI RESTOCK KE DATABASE (TETAP SAMA) ---
-    // Logika ini hanya mengupdate stok, sehingga tidak perlu diubah, 
-    // tetapi jika Anda ingin menyimpan log restock ke tabel lain, 
-    // Anda harus menambahkan query INSERT di sini.
-
+    // --- LOGIKA SIMPAN TRANSAKSI RESTOCK KE DATABASE ---
     private void simpanTransaksiRestock() {
         if (modelTabelRestock.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "Daftar restock masih kosong. Silakan tambahkan barang.", "Peringatan", JOptionPane.WARNING_MESSAGE);
@@ -238,12 +279,13 @@ public class TransaksiRestock extends javax.swing.JFrame {
                 conn = KoneksiDB.getKoneksi();
                 conn.setAutoCommit(false); 
                 
+                // HANYA UPDATE STOK (tidak menyimpan log restock)
                 String sqlUpdateStok = "UPDATE barang SET stok = stok + ? WHERE kode_barang = ?";
                 psUpdateStok = conn.prepareStatement(sqlUpdateStok);
                 
                 for (int i = 0; i < modelTabelRestock.getRowCount(); i++) {
                     String kodeBarang = modelTabelRestock.getValueAt(i, 0).toString();
-                    // String namaSupplier = modelTabelRestock.getValueAt(i, 2).toString(); // Jika ingin disimpan ke log restock
+                    // String namaSupplier = modelTabelRestock.getValueAt(i, 2).toString(); 
                     int jumlahRestock = (int) modelTabelRestock.getValueAt(i, 3); 
                     
                     psUpdateStok.setInt(1, jumlahRestock);
@@ -257,9 +299,13 @@ public class TransaksiRestock extends javax.swing.JFrame {
                 
                 JOptionPane.showMessageDialog(this, "Transaksi Restock Berhasil Diproses!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 
+                // Jika form ini dipanggil dari DataBarang, panggil metode muat ulang tabel di DataBarang
+                // (Baris ini akan menyebabkan error jika DataBarang.java belum diupdate atau tidak tersedia)
+                /*
                 if (parentFrame instanceof DataBarang) {
                     ((DataBarang) parentFrame).load_table();
                 }
+                */
                 
                 bersihkanInputRestock();
                 modelTabelRestock.setRowCount(0); 
@@ -285,7 +331,7 @@ public class TransaksiRestock extends javax.swing.JFrame {
     }
     
 
-    // --- LOGIKA EVENT HANDLER (Tidak Ada Perubahan) ---
+    // --- LOGIKA EVENT HANDLER ---
     
     private void txtKodeBarangKeyPressed(java.awt.event.KeyEvent evt) {                                         
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -341,8 +387,10 @@ public class TransaksiRestock extends javax.swing.JFrame {
         txtKodeBarang = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtNamaBarang = new javax.swing.JTextField();
-        jLabelSupplier = new javax.swing.JLabel(); // BARU
-        txtNamaSupplier = new javax.swing.JTextField(); // BARU
+        jLabelSupplier = new javax.swing.JLabel(); 
+        // DEKLARASI BARU JComboBox DI LAYOUT
+        cmbNamaSupplier = new javax.swing.JComboBox<>(); 
+        // Akhir Deklarasi Baru
         jLabel5 = new javax.swing.JLabel();
         txtJmlRestock = new javax.swing.JTextField();
         btnTambah = new javax.swing.JButton();
@@ -360,7 +408,7 @@ public class TransaksiRestock extends javax.swing.JFrame {
         jPanelBackground.setLayout(new java.awt.BorderLayout(10, 10));
 
         // =================================================================
-        // HEADER PANEL (Tanggal, ID, Title) - Tidak Berubah
+        // HEADER PANEL (Tanggal, ID, Title) 
         // =================================================================
         jPanelHeader.setBackground(new java.awt.Color(58, 151, 151));
         jPanelHeader.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 20, 15, 20));
@@ -407,7 +455,7 @@ public class TransaksiRestock extends javax.swing.JFrame {
 
 
         // =================================================================
-        // INPUT BARANG PANEL - MODIFIKASI: Penambahan field Supplier
+        // INPUT BARANG PANEL - MODIFIKASI: Penggantian field Supplier
         // =================================================================
         jPanelInput.setBackground(new java.awt.Color(245, 245, 245));
         jPanelInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Input Barang Restock"));
@@ -433,13 +481,13 @@ public class TransaksiRestock extends javax.swing.JFrame {
         txtNamaBarang.setPreferredSize(new java.awt.Dimension(250, 30));
         jPanelInput.add(txtNamaBarang);
         
-        // NAMA SUPPLIER BARU
+        // NAMA SUPPLIER BARU (JCOMBOBOX)
         jLabelSupplier.setText("Nama Supplier:");
         jPanelInput.add(jLabelSupplier);
         
-        txtNamaSupplier.setEditable(false);
-        txtNamaSupplier.setPreferredSize(new java.awt.Dimension(200, 30));
-        jPanelInput.add(txtNamaSupplier);
+        // MODIFIKASI: Mengganti txtNamaSupplier dengan cmbNamaSupplier
+        cmbNamaSupplier.setPreferredSize(new java.awt.Dimension(200, 30));
+        jPanelInput.add(cmbNamaSupplier);
 
         // Jumlah Restock
         jLabel5.setText("Jumlah Restock:");
@@ -542,12 +590,13 @@ public class TransaksiRestock extends javax.swing.JFrame {
     private javax.swing.JButton btnKembali;
     private javax.swing.JButton btnSimpanTransaksi;
     private javax.swing.JButton btnTambah;
+    private javax.swing.JComboBox<String> cmbNamaSupplier;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabelSupplier; // DEKLARASI BARU
+    private javax.swing.JLabel jLabelSupplier;
     private javax.swing.JLabel jLabelTitle;
     private javax.swing.JPanel jPanelBackground;
     private javax.swing.JPanel jPanelFooter;
@@ -560,7 +609,6 @@ public class TransaksiRestock extends javax.swing.JFrame {
     private javax.swing.JTextField txtJmlRestock;
     private javax.swing.JTextField txtKodeBarang;
     private javax.swing.JTextField txtNamaBarang;
-    private javax.swing.JTextField txtNamaSupplier; // DEKLARASI BARU
     private javax.swing.JTextField txtTanggal;
     // End of variables declaration//GEN-END:variables
 }

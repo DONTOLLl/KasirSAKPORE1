@@ -666,7 +666,11 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
     // Aksi untuk tombol lain (hanya simulasi)
     private void btnSupplierActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Supplier");
+        // 1. Buat instance form TambahSupplier
+    // KODE BARU (di DashboardAdmin.java)
+    TambahSupplier formSupplier = new TambahSupplier(this); // <<< Melewatkan Dashboard Admin ("this")
+    formSupplier.setVisible(true);
+    this.dispose();
     }
 
     private void btnDataBarangActionPerformed(java.awt.event.ActionEvent evt) {

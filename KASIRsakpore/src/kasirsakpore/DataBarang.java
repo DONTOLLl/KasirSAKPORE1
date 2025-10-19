@@ -284,10 +284,12 @@ public class DataBarang extends javax.swing.JFrame {
     
     if (konfirmasi == JOptionPane.YES_OPTION) {
         try {
-            // FIX PENTING: Menggunakan 4 argumen (dengan null) agar sesuai dengan temporary fix di TransaksiRestock.java
-            TransaksiRestock restockForm = new TransaksiRestock(this, kodeBarangDipilih, namaBarangDipilih, null);
-            this.setVisible(false);
-            restockForm.setVisible(true);
+            // 2. Panggil konstruktor TransaksiRestock BARU dengan membawa data
+            // Mengirim DataBarang (this) sebagai parent frame
+            // PARENT FRAME (this), KODE BARANG, NAMA BARANG
+TransaksiRestock restockForm = new TransaksiRestock(this, kodeBarangDipilih, namaBarangDipilih);
+this.setVisible(false);
+restockForm.setVisible(true);
 
         } catch (Exception e) {
              JOptionPane.showMessageDialog(this, "Gagal memuat form Restock: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
