@@ -4,118 +4,138 @@
  */
 package kasirsakpore;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.JOptionPane;
-
+import javax.swing.JFrame; 
 
 /**
  *
  * @author Acer
  */
 public class DashboardAdmin extends javax.swing.JFrame {
-private String currentUserLevel; 
+    
+    private int currentUserId; // Variabel untuk menyimpan ID Pengguna
+    private String currentUserLevel; // Variabel untuk menyimpan Role/Level Pengguna
 
-    /**
-     * CONSTRUCTOR UTAMA: Dipanggil dari Login.java untuk Admin dan Laporan.
-     * Menerima dan mengatur role pengguna.
-     */
-    public DashboardAdmin(String userLevel) {
+    // =======================================================
+    // CONSTRUCTOR
+    // =======================================================
+    public DashboardAdmin(int userId, String userRole) {
         initComponents();
-        this.currentUserLevel = userLevel;
-        setTanggal(); 
-        
-        // Panggil method untuk menerapkan pembatasan menu
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        this.currentUserId = userId; 
+        this.currentUserLevel = userRole; 
+        this.setLocationRelativeTo(null); 
+        setTanggalDanWaktu(); 
         checkAccess(); 
+        setupEscapeKey(); 
     }
 
-    /**
-     * CONSTRUCTOR DEFAULT: Hanya untuk NetBeans Design/Testing atau main method.
-     */
     public DashboardAdmin() {
         initComponents();
-        this.currentUserLevel = "Admin"; // Set default role untuk testing
-        setTanggal();
-        checkAccess(); 
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        this.currentUserLevel = "ADMIN"; 
+        this.setLocationRelativeTo(null); 
+        setTanggalDanWaktu();
+        checkAccess();
+        setupEscapeKey(); 
     }
 
-    // --- LOGIC KONTROL AKSES ---
-
-    /**
-     * Method untuk mengatur visibilitas menu berdasarkan role pengguna.
-     * Komponen yang diatur adalah panel/tombol untuk User, Supplier, Barang, Kategori, dan Transaksi (Master Data).
-     */
-    private void checkAccess() {
+    // =======================================================
+    // LOGIC LOGOUT DAN SHORTCUT ESC
+    // =======================================================
+    
+    private void logoutAksi() {
+        int konfirmasi = JOptionPane.showConfirmDialog(this, "Yakin ingin keluar dan Logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
         
-        // 1. Update Tampilan Header
-        // Menampilkan role di samping tanggal/di label yang sesuai (jLabel3)
-        jLabel3.setText(this.currentUserLevel); 
-
-        if (this.currentUserLevel.equals("Laporan")) {
-            
-            // Atur Title Frame
-            this.setTitle("Dashboard Laporan - Sakpore!");
-
-            // --- BATASI AKSES (Sembunyikan Menu Master Data/Admin) ---
-            
-            // Sembunyikan Menu Master Data / Admin:
-            jPanel1.setVisible(false); // USER MANAGER (jButton1)
-            jPanel3.setVisible(false); // SUPPLIER (jButton2)
-            jPanel4.setVisible(false); // DATA BARANG (jButton3)
-            jPanel5.setVisible(false); // KATEGORI (jButton4)
-            jPanel6.setVisible(false); // TRANSAKSI (jButton5) - Biasanya ini adalah menu utama kasir/master transaksi
-
-            // --- AKSES DIBERIKAN (Menu Laporan) ---
-            
-            // Tampilkan Menu Laporan:
-            jPanel7.setVisible(true);  // LAPORAN TRANSAKSI (jButton6)
-            jPanel8.setVisible(true);  // LAPORAN PENJUALAN (jButton7)
-            
-            // Tambahkan logika untuk mengatur tata letak jika ada panel yang hilang
-            // Misalnya, Anda bisa memanggil revalidate() dan repaint() pada container utama
-            
-        } else if (this.currentUserLevel.equals("Admin")) {
-            
-            // Atur Title Frame
-            this.setTitle("Dashboard Administrator - Sakpore!");
-            
-            // --- AKSES PENUH (Tampilkan Semua Menu) ---
-            
-            // Tampilkan semua panel (default)
-            jPanel1.setVisible(true); 
-            jPanel3.setVisible(true); 
-            jPanel4.setVisible(true); 
-            jPanel5.setVisible(true); 
-            jPanel6.setVisible(true); 
-            jPanel7.setVisible(true); 
-            jPanel8.setVisible(true);
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            try {
+                this.dispose();
+                // Asumsi kelas Login ada di package kasirsakpore
+                // Ganti Login() dengan constructor Login Anda jika berbeda
+                Login loginForm = new Login(); 
+                loginForm.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                loginForm.setVisible(true);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal memuat Form Login. Aplikasi akan ditutup.", "Error Logout", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
         }
     }
-
-    // --- LOGIC TANGGAL DAN WAKTU ---
     
-    private void setTanggal() {
+    private void setupEscapeKey() {
+        InputMap inputMap = getRootPane().getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getRootPane().getActionMap();
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        inputMap.put(escapeKeyStroke, "escapeAction");
+        actionMap.put("escapeAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logoutAksi();
+            }
+        });
+    }
+
+    // --- LOGIC TANGGAL DAN WAKTU (Otomatis berganti) ---
+    
+    private void setTanggalDanWaktu() {
         Timer timer = new Timer(1000, e -> {
-            Date now = new Date(); 
-            // Menggunakan format yang lebih lengkap termasuk hari dan bulan Indonesia
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
-            lblTanggal.setText(sdf.format(now));
+            Date now = new Date();
+            // Format ID, HH:mm:ss ditambahkan
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy, HH:mm:ss", new Locale("id", "ID"));
+            lblTanggal.setText(sdf.format(now)); 
         });
         timer.start();
     }
     
+    // --- LOGIC KONTROL AKSES ---
+
+    private void checkAccess() {
+        String role = this.currentUserLevel.toUpperCase();
+        
+        // 1. Update Tampilan Header 
+        jLabel3.setText(role);
+        this.setTitle("Dashboard - Sakpore! Login sebagai: " + role);
+
+        // 2. Tentukan Tipe Role
+        boolean isAdmin = role.equals("ADMIN");
+        boolean isKasir = role.startsWith("KASIR"); 
+        boolean isLaporan = role.equals("LAPORAN");
+        
+        // 3. Atur Visibilitas Kartu
+        
+        jPanel1.setVisible(isAdmin); // USER MANAGER 
+        jPanel3.setVisible(isAdmin); // SUPPLIER 
+        jPanel5.setVisible(isAdmin); // KATEGORI 
+
+        jPanel4.setVisible(isAdmin || isKasir); // DATA BARANG
+        jPanel6.setVisible(isAdmin || isKasir); // TRANSAKSI 
+
+        jPanel7.setVisible(isAdmin || isLaporan); // LAPORAN TRANSAKSI
+        jPanel8.setVisible(isAdmin || isLaporan); // LAPORAN PENJUALAN
+        
+        this.revalidate();
+        this.repaint();
+    }
+
+    // --- LOGIC NAVIGASI (Pengalihan Form) ---
     
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
@@ -123,6 +143,7 @@ private String currentUserLevel;
         jLabel2 = new javax.swing.JLabel();
         lblTanggal = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton(); 
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -168,43 +189,60 @@ private String currentUserLevel;
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logologin-removebg-preview-resize.png"))); // NOI18N
 
         lblTanggal.setFont(new java.awt.Font("GeoSlab703 Md BT", 0, 24)); // NOI18N
-        lblTanggal.setText("Rabu, 10 September 2025");
+        lblTanggal.setText("Rabu, 10 September 2025"); 
 
         jLabel3.setFont(new java.awt.Font("GeoSlab703 Md BT", 0, 18)); // NOI18N
-        jLabel3.setText("Admin");
+        jLabel3.setText("Admin"); 
+
+        btnLogout.setText("LOGOUT [ESC]");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
+        
+        // PERBAIKAN LAYOUT HEADER - Horizontal
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(59, 59, 59)
-                .addComponent(jLabel1)
+                // Logo Sakpore & Logout
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE) 
+                )
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblTanggal)
-                .addGap(59, 59, 59)
-                .addComponent(jLabel2)
+                
+                // Icon, Role, dan Tanggal di pojok kanan
+                .addComponent(jLabel2) // Icon Orang
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addGap(67, 67, 67))
+                .addComponent(jLabel3) // Role
+                .addGap(30, 30, 30) // Jarak antara Role dan Tanggal
+                .addComponent(lblTanggal) // Tanggal
+                .addGap(67, 67, 67)) // Padding kanan
         );
+        
+        // PERBAIKAN LAYOUT HEADER - Vertical
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(20, 20, 20) // Padding atas
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(lblTanggal))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    // Baris 1: Logo, Icon, Role, Tanggal
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(31, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(45, 45, 45))
+                            .addComponent(jLabel3)
+                            .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                )
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                // Baris 2: Tombol Logout (di bawah logo)
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE) 
+                .addContainerGap(20, Short.MAX_VALUE)) // Padding bawah
         );
 
         jPanel1.setBackground(new java.awt.Color(161, 194, 189));
@@ -221,7 +259,7 @@ private String currentUserLevel;
         btnUserManager.setText("USER MANAGER");
         btnUserManager.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUserManagerActionPerformed(evt);
+                btnUserManagerActionPerformed(evt); 
             }
         });
 
@@ -545,91 +583,118 @@ private String currentUserLevel;
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
+        
+        // HORIZONTAL GROUP UTAMA
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup() 
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE) 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    // Baris 3 (Hanya Laporan Penjualan)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE) 
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
+                        // Baris 1 & 2 - Kolom 1
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addGap(31, 31, 31)
+                        // Baris 1 & 2 - Kolom 2
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                // Kolom 3
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        // VERTICAL GROUP UTAMA 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(40, 40, 40) // Jarak atas ke baris 1
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(63, 63, 63)
+                .addGap(40, 40, 40) // Jarak baris 1 ke baris 2
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addGap(40, 40, 40) // Jarak baris 2 ke baris 3 (Laporan Penjualan)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addContainerGap(40, Short.MAX_VALUE)) // Jarak bawah
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
-    private void btnUserManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserManagerActionPerformed
-        // TODO add your handling code here:
-//        UserManager userManagerForm = new UserManager();
+    // =======================================================
+    // ACTION LISTENERS (Navigasi & Logout)
+    // =======================================================
     
-    // 2. Tampilkan form tujuan
-//    userManagerForm.setVisible(true);
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        logoutAksi();
+    } 
+
+    // FIX: LOGIKA NAVIGASI USER MANAGER YANG BENAR
+    private void btnUserManagerActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            this.setVisible(false); 
+            
+            // Panggil constructor UserManager yang menerima parent frame (this)
+            UserManager userManagerForm = new UserManager(this); 
+            userManagerForm.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+            userManagerForm.setVisible(true);
+
+        } catch (Exception e) {
+            // Tampilkan error di console NetBeans. Ini penting!
+            e.printStackTrace(); 
+            
+            JOptionPane.showMessageDialog(this, 
+                "Gagal memuat Form User Manager. Cek koneksi database atau error di UserManager.java.", 
+                "Error Navigasi", 
+                JOptionPane.ERROR_MESSAGE);
+                
+            this.setVisible(true); // Tampilkan kembali dashboard jika navigasi gagal
+        }
+    }
+
+    // Aksi untuk tombol lain (hanya simulasi)
+    private void btnSupplierActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Supplier");
+    }
+
+    private void btnDataBarangActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            // Buat instance DataBarang, passing 'this' (DashboardAdmin) sebagai parent frame
+            DataBarang dataBarang = new DataBarang(this);
+            dataBarang.setVisible(true); // Tampilkan form DataBarang
+            this.setVisible(false);      // Sembunyikan DashboardAdmin
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat form Data Barang: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
-    // 3. Sembunyikan form DashboardAdmin saat ini
-    // Agar form ini tidak hilang dari memori (untuk kembali lagi), 
-    // kita gunakan dispose() setelah semua form ditutup. 
-    // Tapi, untuk berpindah form, kita bisa menggunakan:
-    this.dispose(); // Menutup frame saat ini dan membebaskan sumber daya
-    
-    // CATATAN: Jika Anda ingin tetap membuka DashboardAdmin di belakang, 
-    // gunakan: this.setVisible(false);
-    }//GEN-LAST:event_btnUserManagerActionPerformed
+    private void btnKategoriActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Kategori");
+    }
 
-    private void btnSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSupplierActionPerformed
+    private void btnTransaksiActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Transaksi Penjualan");
+    }
 
-    private void btnDataBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataBarangActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDataBarangActionPerformed
+    private void btnLaporanTransaksiActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Laporan Transaksi");
+    }
 
-    private void btnKategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKategoriActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnKategoriActionPerformed
-
-    private void btnTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaksiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTransaksiActionPerformed
-
-    private void btnLaporanTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanTransaksiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLaporanTransaksiActionPerformed
-
-    private void btnLaporanPenjualanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanPenjualanActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLaporanPenjualanActionPerformed
+    private void btnLaporanPenjualanActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Laporan Penjualan");
+    }
 
     /**
      * @param args the command line arguments
@@ -637,9 +702,6 @@ private String currentUserLevel;
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -647,22 +709,14 @@ private String currentUserLevel;
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DashboardAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DashboardAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DashboardAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(DashboardAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new DashboardAdmin().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new DashboardAdmin().setVisible(true);
         });
     }
 
@@ -671,6 +725,7 @@ private String currentUserLevel;
     private javax.swing.JButton btnKategori;
     private javax.swing.JButton btnLaporanPenjualan;
     private javax.swing.JButton btnLaporanTransaksi;
+    private javax.swing.JButton btnLogout; 
     private javax.swing.JButton btnSupplier;
     private javax.swing.JButton btnTransaksi;
     private javax.swing.JButton btnUserManager;
