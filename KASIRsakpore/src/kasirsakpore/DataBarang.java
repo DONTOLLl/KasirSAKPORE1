@@ -266,35 +266,20 @@ public class DataBarang extends javax.swing.JFrame {
 
     private void btnRestockActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // Membuka form TransaksiRestock (versi multi-item)
-        int selectedRow = jTableDataBarang.getSelectedRow();
+        String kodeBarang = txtKodeBarang.getText();
+    String namaBarang = txtNamaBarang.getText(); 
     
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Pilih satu baris barang dari tabel yang akan di-restock.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+    if (kodeBarang.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Pilih barang yang akan di-restock terlebih dahulu.", "Peringatan", JOptionPane.WARNING_MESSAGE);
         return;
     }
-    
-    // 1. Ambil data dari baris terpilih
-    String kodeBarangDipilih = jTableDataBarang.getValueAt(selectedRow, 0).toString();
-    String namaBarangDipilih = jTableDataBarang.getValueAt(selectedRow, 1).toString();
-    
-    int konfirmasi = JOptionPane.showConfirmDialog(this, 
-            "Mulai Transaksi Restock Baru untuk barang: " + namaBarangDipilih + "?", 
-            "Konfirmasi Restock", 
-            JOptionPane.YES_NO_OPTION);
-    
-    if (konfirmasi == JOptionPane.YES_OPTION) {
-        try {
-            // 2. Panggil konstruktor TransaksiRestock BARU dengan membawa data
-            // Mengirim DataBarang (this) sebagai parent frame
-            // PARENT FRAME (this), KODE BARANG, NAMA BARANG
-TransaksiRestock restockForm = new TransaksiRestock(this, kodeBarangDipilih, namaBarangDipilih);
-this.setVisible(false);
-restockForm.setVisible(true);
 
-        } catch (Exception e) {
-             JOptionPane.showMessageDialog(this, "Gagal memuat form Restock: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    // *** BARIS KODE YANG HARUS ANDA GANTI ADA DI BAWAH INI ***
+    // Panggil form TransaksiRestock menggunakan metode getInstance()
+    TransaksiRestock restockForm = TransaksiRestock.getInstance(this, kodeBarang, namaBarang);
+    
+    restockForm.setVisible(true);
+    this.setVisible(false);
 }                                 
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {                                        
