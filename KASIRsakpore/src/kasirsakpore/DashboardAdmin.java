@@ -1,4 +1,4 @@
-/*
+/*private void jPanel
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame; 
+import kasirsakpore.UserManager;
 
 /**
  *
@@ -654,9 +655,6 @@ public class DashboardAdmin extends javax.swing.JFrame {
     // ACTION LISTENERS (Navigasi & Logout)
     // =======================================================
     
-    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        logoutAksi();
-    } 
 
     // FIX: LOGIKA NAVIGASI USER MANAGER YANG BENAR
     private void btnUserManagerActionPerformed(java.awt.event.ActionEvent evt) {
@@ -708,8 +706,22 @@ public class DashboardAdmin extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Transaksi Penjualan");
     }
 
+    // Bagian yang harus diganti di file DashboardAdmin.java:
+
     private void btnLaporanTransaksiActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Laporan Transaksi");
+        try {
+            // Membuat instance LaporanTransaksi
+            LaporanTransaksi laporanForm = new LaporanTransaksi(); 
+            // Menampilkan form Laporan Transaksi
+            laporanForm.setVisible(true);
+            
+            // Jika Anda ingin Dashboard Admin tetap terbuka, jangan gunakan:
+            // this.setVisible(false); 
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat Form Laporan Transaksi: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     private void btnLaporanPenjualanActionPerformed(java.awt.event.ActionEvent evt) {

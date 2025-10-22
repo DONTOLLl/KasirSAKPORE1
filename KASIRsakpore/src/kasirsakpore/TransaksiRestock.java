@@ -139,6 +139,57 @@ public class TransaksiRestock extends javax.swing.JFrame {
         loadSupplier(); // Panggil untuk mengisi ComboBox supplier
         setupAkselerator();
     }
+
+    // =======================================================
+// CUSTOM UTILITY METHODS
+// =======================================================
+
+    // ... (metode formatRupiah dan parseRupiah yang sudah ada) ...
+    
+    /**
+     * Mengambil Kode Supplier (ID) dari tabel 'supplier' berdasarkan Nama Supplier.
+     * @param namaSupplier Nama Supplier yang ada di JComboBox atau tabel restock.
+     * @return Kode Supplier (String) atau null jika tidak ditemukan.
+     */
+    private String getKodeSupplier(String namaSupplier) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        String kodeSupplier = null;
+        
+        // Cepat keluar jika yang dipilih adalah placeholder atau null
+        if (namaSupplier == null || namaSupplier.equals("-- Pilih Supplier --")) {
+            return null;
+        }
+
+        try {
+            conn = KoneksiDB.getKoneksi(); 
+            // Query untuk mencari kode_supplier berdasarkan nama_supplier
+            String sql = "SELECT kode_supplier FROM supplier WHERE nama_supplier = ?";
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, namaSupplier);
+            
+            rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                kodeSupplier = rs.getString("kode_supplier"); 
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error saat mengambil Kode Supplier: " + e.getMessage());
+        } finally {
+            // Tutup resources
+            try { if (rs != null) rs.close(); } catch (SQLException e) { /* ignore */ }
+            try { if (pst != null) pst.close(); } catch (SQLException e) { /* ignore */ }
+            // Tidak perlu menutup conn di sini, karena akan ditutup di finally block utama
+        }
+        return kodeSupplier;
+    }
+    
+// =======================================================
+// CUSTOM DATA & UI METHODS
+// =======================================================
+// ... (lanjutkan dengan kode loadDataBarang, dll.) ...
     
     /**
      * Mengambil data Harga Beli dari tabel 'barang' berdasarkan Kode Barang
@@ -443,7 +494,7 @@ public class TransaksiRestock extends javax.swing.JFrame {
     PreparedStatement pstPembelian = null;
     PreparedStatement pstDetail = null;
     PreparedStatement pstUpdateStock = null;
-    String noPembelian = txtIDRestock.getText(); // Mengganti idRestock menjadi noPembelian
+    String noPembelian = txtIDRestock.getText(); 
 
 // >>> KODE PERBAIKAN: Gunakan java.sql.Timestamp <<<
 java.util.Date utilDate = new java.util.Date();
@@ -486,35 +537,49 @@ java.sql.Timestamp tanggal = new java.sql.Timestamp(utilDate.getTime());
         // >>> PERBAIKAN 3: Ganti id_pembelian menjadi no_pembelian di Query SQL <<<
         String sqlDetail = "INSERT INTO detail_pembelian (no_pembelian, kode_barang, kode_supplier, jumlah_barang, harga, total_harga) VALUES (?, ?, ?, ?, ?, ?)";
         // ASUMSI: Tabel barang memiliki kolom kode_barang dan stock
-        String sqlUpdateStock = "UPDATE barang SET stock = stock + ? WHERE kode_barang = ?";
-        
-        pstDetail = conn.prepareStatement(sqlDetail);
+
+
+String sqlUpdateStock = "UPDATE barang SET stok = stok + ? WHERE kode_barang = ?";        pstDetail = conn.prepareStatement(sqlDetail);
         pstUpdateStock = conn.prepareStatement(sqlUpdateStock);
         
-        for (int i = 0; i < modelTabelRestock.getRowCount(); i++) {
-            String kodeBarang = (String) modelTabelRestock.getValueAt(i, 0);
-            String supplier = (String) modelTabelRestock.getValueAt(i, 2);
-            int jmlRestock = Integer.parseInt((String) modelTabelRestock.getValueAt(i, 3));
-            
-            // Ambil harga beli dan subtotal dengan parseRupiah dari String terformat di tabel
-            double hargaBeli = parseRupiah((String) modelTabelRestock.getValueAt(i, 4));
-            double subtotal = parseRupiah((String) modelTabelRestock.getValueAt(i, 5));
+        // Baris 557 - 581 (Ganti seluruh blok for loop ini)
+for (int i = 0; i < modelTabelRestock.getRowCount(); i++) {
+    String kodeBarang = (String) modelTabelRestock.getValueAt(i, 0);
+    String namaSupplier = (String) modelTabelRestock.getValueAt(i, 2); // Ambil Nama Supplier
+    
+    // --- PERBAIKAN SUPPLIER MAPPING ---
+    String kodeSupplier = getKodeSupplier(namaSupplier); // Panggil metode baru
+    
+    if (kodeSupplier == null || kodeSupplier.isEmpty()) {
+        // Jika Kode Supplier tidak ditemukan, batalkan transaksi
+        throw new SQLException("Kode Supplier tidak ditemukan di database untuk Nama: " + namaSupplier + ". Transaksi dibatalkan.");
+    }
+    // -----------------------------------
 
-            // Simpan ke detail_pembelian
-            pstDetail.setString(1, noPembelian); // Menggunakan noPembelian
-            pstDetail.setString(2, kodeBarang);
-            pstDetail.setString(3, supplier);
-            pstDetail.setInt(4, jmlRestock);
-            pstDetail.setInt(5, hargaBeli);
-            pstDetail.setInt(6, subtotal);
-            pstDetail.executeUpdate();
+    int jmlRestock = Integer.parseInt((String) modelTabelRestock.getValueAt(i, 3));
+    
+    // Ambil harga beli dan subtotal dengan parseRupiah dari String terformat di tabel
+    double hargaBeli = parseRupiah((String) modelTabelRestock.getValueAt(i, 4));
+    double subtotal = parseRupiah((String) modelTabelRestock.getValueAt(i, 5));
 
-            // Update Stock di tabel barang
-            pstUpdateStock.setInt(1, jmlRestock);
-            pstUpdateStock.setString(2, kodeBarang);
-            pstUpdateStock.executeUpdate();
-        }
+    // Simpan ke detail_pembelian
+    pstDetail.setString(1, noPembelian); 
+    pstDetail.setString(2, kodeBarang);
+    pstDetail.setString(3, kodeSupplier); // Menggunakan KODE SUPPLIER (ID)
+    pstDetail.setInt(4, jmlRestock);
+    
+    // --- PERBAIKAN TYPE CASTING ---
+    pstDetail.setInt(5, (int) hargaBeli);
+    pstDetail.setInt(6, (int) subtotal);
+    // ------------------------------
+    
+    pstDetail.executeUpdate();
 
+    // Update Stock di tabel barang
+    pstUpdateStock.setInt(1, jmlRestock);
+    pstUpdateStock.setString(2, kodeBarang);
+    pstUpdateStock.executeUpdate();
+}
         conn.commit(); // Commit transaksi
         JOptionPane.showMessageDialog(this, "Transaksi Restock berhasil disimpan. Stok barang telah diperbarui.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
         
@@ -527,25 +592,25 @@ java.sql.Timestamp tanggal = new java.sql.Timestamp(utilDate.getTime());
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        JOptionPane.showMessageDialog(this, "Gagal menyimpan transaksi ne: " + e.getMessage(), "DB Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Gagal menyimpan transaksi: " + e.getMessage(), "DB Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     } finally {
-        // --- BLOK INI ADALAH PERBAIKANNYA ---
-        try { if (pstPembelian != null) pstPembelian.close(); } catch (SQLException e) { /* ignore */ }
-        try { if (pstDetail != null) pstDetail.close(); } catch (SQLException e) { /* ignore */ }
-        try { if (pstUpdateStock != null) pstUpdateStock.close(); } catch (SQLException e) { /* ignore */ }
-        
-        // PASTIKAN conn.close() HANYA DIPANGGIL JIKA conn TIDAK NULL
-        try { 
-            if (conn != null) { // PENTING: Gunakan kurung kurawal {}
-                conn.setAutoCommit(true); 
-                conn.close(); 
-            } 
-        } catch (SQLException e) { 
-            /* ignore */ 
-        }
+    // Tutup PreparedStatement dan ResultSet (Penting)
+    try { if (pstPembelian != null) pstPembelian.close(); } catch (SQLException e) { /* ignore */ }
+    try { if (pstDetail != null) pstDetail.close(); } catch (SQLException e) { /* ignore */ }
+    try { if (pstUpdateStock != null) pstUpdateStock.close(); } catch (SQLException e) { /* ignore */ }
+    
+    // HANYA reset AutoCommit, JANGAN tutup koneksi utama
+    try { 
+        if (conn != null) { 
+            conn.setAutoCommit(true); 
+            // conn.close() DIHAPUS DI SINI!
+        } 
+    } catch (SQLException e) { 
+        /* ignore */ 
     }
 }
+    }
 
     private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {                                         
         if (parentFrame != null) {

@@ -24,7 +24,7 @@ public class KoneksiDB {
                 // Variabel Database (SESUAIKAN INI DENGAN PENGATURAN ANDA)
                 String url = "jdbc:postgresql://localhost:5432/sakpore_db"; 
                 String user = "postgres"; // User default PostgreSQL
-                String password = "123"; // GANTI DENGAN PASSWORD POSTGRES ANDA
+                String password = "12345"; // GANTI DENGAN PASSWORD POSTGRES ANDA
                 
                 // 2. Buka Koneksi
                 koneksi = DriverManager.getConnection(url, user, password);
