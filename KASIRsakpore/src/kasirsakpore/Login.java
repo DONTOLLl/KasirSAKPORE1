@@ -13,7 +13,7 @@ import koneksi.KoneksiDB;
 import javax.swing.JFrame; 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.BorderLayout; // Menggunakan BorderLayout untuk Wrapper
+import java.awt.BorderLayout;
 
 /**
  *
@@ -23,13 +23,26 @@ public class Login extends javax.swing.JFrame {
     
     // Asumsi: Tabel pengguna memiliki kolom 'id_pengguna', 'role', 'password', dan 'status'.
 
+    /**
+     * FIX: Menggunakan logika percabangan untuk mengarahkan ke dashboard yang tepat.
+     * Mengarahkan Kasir ke InputPenjualan.java.
+     */
     private void handleLoginSuccess(int userId, String userRole) {
         try {
-            DashboardAdmin dashboard = new DashboardAdmin(userId, userRole); 
-            dashboard.setVisible(true);
+            if (userRole.equalsIgnoreCase("Kasir")) {
+                // FIX: Disesuaikan dengan error kompilasi terakhir (Hanya butuh JFrame dan int)
+                // Asumsi: Konstruktor InputPenjualan adalah InputPenjualan(JFrame parent, int userId)
+                InputPenjualan inputPenjualan = new InputPenjualan(this, userId); 
+                inputPenjualan.setVisible(true);
+            } else {
+                // Arahkan ke Dashboard Admin (untuk Admin dan Owner)
+                DashboardAdmin dashboard = new DashboardAdmin(userId, userRole); 
+                dashboard.setVisible(true);
+            }
             this.dispose(); 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal memuat Dashboard Admin: " + e.getMessage(), "Error Pengalihan", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Gagal memuat halaman: " + e.getMessage(), "Error Pengalihan", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
     
@@ -193,6 +206,7 @@ public class Login extends javax.swing.JFrame {
                 
                 JOptionPane.showMessageDialog(null, "Login Berhasil! Selamat datang sebagai " + userRole, "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 
+                // Panggil handleLoginSuccess untuk pengalihan berdasarkan role
                 handleLoginSuccess(userId, userRole);
                 
             } else {
@@ -204,6 +218,7 @@ public class Login extends javax.swing.JFrame {
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Kesalahan Database. Pastikan server PostgreSQL sudah berjalan.\nDetail: " + e.getMessage(), "Kesalahan Koneksi", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

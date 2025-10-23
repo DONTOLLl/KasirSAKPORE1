@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author ISSI
  */
 public class KoneksiDB {
-    private static Connection koneksi;
+    private static Connection koneksi; 
     
     public static Connection getKoneksi() {
         if (koneksi == null) {

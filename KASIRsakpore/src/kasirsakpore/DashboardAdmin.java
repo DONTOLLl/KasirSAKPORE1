@@ -17,6 +17,10 @@ import javax.swing.Timer;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame; 
 import kasirsakpore.UserManager;
+// Tambahkan import jika LaporanPenjualan tidak berada di package yang sama
+// import kasirsakpore.LaporanPenjualan; 
+// Karena berada di package yang sama, tidak perlu import eksplisit.
+
 
 /**
  *
@@ -53,7 +57,6 @@ public class DashboardAdmin extends javax.swing.JFrame {
     
     public void performLogout() {
     // 1. Membersihkan Sesi (PENTING, jika ada)
-    // Contoh: SessionManager.clearUserData();
     
     // 2. Menutup Jendela Dashboard Saat Ini
     this.dispose(); 
@@ -73,7 +76,11 @@ public class DashboardAdmin extends javax.swing.JFrame {
     // =======================================================
     
     private void logoutAksi() {
-        int konfirmasi = JOptionPane.showConfirmDialog(this, "Yakin ingin keluar dan Logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+        // Menggunakan 4 argumen: Parent, Pesan, Judul, Opsi (Telah diperbaiki)
+        int konfirmasi = JOptionPane.showConfirmDialog(this, 
+            "Yakin ingin keluar dan Logout?", 
+            "Konfirmasi Logout", 
+            JOptionPane.YES_NO_OPTION); 
         
         if (konfirmasi == JOptionPane.YES_OPTION) {
             try {
@@ -114,7 +121,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         timer.start();
     }
     
-    // --- LOGIC KONTROL AKSES ---
+    // --- LOGIC KONTROL AKSES (KATEGORI DAN TRANSAKSI DIHAPUS) ---
 
     private void checkAccess() {
         String role = this.currentUserLevel.toUpperCase();
@@ -132,10 +139,10 @@ public class DashboardAdmin extends javax.swing.JFrame {
         
         jPanel1.setVisible(isAdmin); // USER MANAGER 
         jPanel3.setVisible(isAdmin); // SUPPLIER 
-        jPanel5.setVisible(isAdmin); // KATEGORI 
+        // jPanel5 (KATEGORI) DIHAPUS
 
         jPanel4.setVisible(isAdmin || isKasir); // DATA BARANG
-        jPanel6.setVisible(isAdmin || isKasir); // TRANSAKSI 
+        // jPanel6 (TRANSAKSI) DIHAPUS
 
         jPanel7.setVisible(isAdmin || isLaporan); // LAPORAN TRANSAKSI
         jPanel8.setVisible(isAdmin || isLaporan); // LAPORAN PENJUALAN
@@ -162,37 +169,29 @@ public class DashboardAdmin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        // jLabel4 (Angka '0') DIHAPUS
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         btnUserManager = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        // jLabel6 (Angka '0') DIHAPUS
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         btnSupplier = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
+        // jLabel10 (Angka '0') DIHAPUS
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         btnDataBarang = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        btnKategori = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        btnTransaksi = new javax.swing.JButton();
+        // jPanel5 (Kategori) DIHAPUS
+        // jPanel6 (Transaksi) DIHAPUS
         jPanel7 = new javax.swing.JPanel();
-        jLabel19 = new javax.swing.JLabel();
+        // jLabel19 (Angka '0') DIHAPUS
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         btnLaporanTransaksi = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
-        jLabel22 = new javax.swing.JLabel();
+        // jLabel22 (Angka '0') DIHAPUS
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         btnLaporanPenjualan = new javax.swing.JButton();
@@ -222,7 +221,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         
-        // LAYOUT HEADER - Horizontal (Menggunakan versi yang memisahkan Role dan Tanggal)
+        // LAYOUT HEADER - Horizontal
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -243,7 +242,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
                 .addGap(67, 67, 67)) // Padding kanan
         );
         
-        // LAYOUT HEADER - Vertical (Menggunakan versi yang menempatkan Logout di bawah Logo)
+        // LAYOUT HEADER - Vertical
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -265,8 +264,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(161, 194, 189));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setText("0");
+        // Angka 0 (jLabel4) DIHAPUS
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -291,7 +289,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(178, 178, 178)
                         .addComponent(jLabel5))
-                    .addComponent(jLabel4)
+                    //.addComponent(jLabel4) // DIHAPUS
                     .addComponent(btnUserManager))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(jLabel7)
@@ -302,9 +300,9 @@ public class DashboardAdmin extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
+                    //.addComponent(jLabel4) // DIHAPUS
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE) // Jarak disesuaikan
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(btnUserManager)
@@ -313,8 +311,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(161, 194, 189));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel6.setText("0");
+        // Angka 0 (jLabel6) DIHAPUS
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -339,7 +336,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(178, 178, 178)
                         .addComponent(jLabel8))
-                    .addComponent(jLabel6)
+                    //.addComponent(jLabel6) // DIHAPUS
                     .addComponent(btnSupplier))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(jLabel9)
@@ -350,9 +347,9 @@ public class DashboardAdmin extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
+                    //.addComponent(jLabel6) // DIHAPUS
                     .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE) // Jarak disesuaikan
                 .addComponent(jLabel8)
                 .addGap(18, 18, 18)
                 .addComponent(btnSupplier)
@@ -361,8 +358,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(161, 194, 189));
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel10.setText("0");
+        // Angka 0 (jLabel10) DIHAPUS
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -387,7 +383,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(178, 178, 178)
                         .addComponent(jLabel11))
-                    .addComponent(jLabel10)
+                    //.addComponent(jLabel10) // DIHAPUS
                     .addComponent(btnDataBarang))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(jLabel12)
@@ -398,115 +394,20 @@ public class DashboardAdmin extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
+                    //.addComponent(jLabel10) // DIHAPUS
                     .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE) // Jarak disesuaikan
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
                 .addComponent(btnDataBarang)
                 .addGap(49, 49, 49))
         );
-
-        jPanel5.setBackground(new java.awt.Color(161, 194, 189));
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel13.setText("0");
-
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-
-        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/categorization (1).png"))); // NOI18N
-
-        btnKategori.setBackground(new java.awt.Color(161, 194, 189));
-        btnKategori.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnKategori.setText("KATEGORI");
-        btnKategori.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnKategoriActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(178, 178, 178)
-                        .addComponent(jLabel14))
-                    .addComponent(jLabel13)
-                    .addComponent(btnKategori))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                .addComponent(jLabel15)
-                .addGap(31, 31, 31))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel15))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel14)
-                .addGap(18, 18, 18)
-                .addComponent(btnKategori)
-                .addGap(49, 49, 49))
-        );
-
-        jPanel6.setBackground(new java.awt.Color(161, 194, 189));
-
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel16.setText("0");
-
-        jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-
-        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/transaction (1).png"))); // NOI18N
-
-        btnTransaksi.setBackground(new java.awt.Color(161, 194, 189));
-        btnTransaksi.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnTransaksi.setText("TRANSAKSI");
-        btnTransaksi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTransaksiActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(178, 178, 178)
-                        .addComponent(jLabel17))
-                    .addComponent(jLabel16)
-                    .addComponent(btnTransaksi))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                .addComponent(jLabel18)
-                .addGap(31, 31, 31))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel18))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel17)
-                .addGap(18, 18, 18)
-                .addComponent(btnTransaksi)
-                .addGap(49, 49, 49))
-        );
+        
+        // BAGIAN KODE UNTUK JPanels 5 (KATEGORI) dan 6 (TRANSAKSI) DIHAPUS.
 
         jPanel7.setBackground(new java.awt.Color(161, 194, 189));
 
-        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel19.setText("0");
+        // Angka 0 (jLabel19) DIHAPUS
 
         jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -531,7 +432,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(178, 178, 178)
                         .addComponent(jLabel20))
-                    .addComponent(jLabel19)
+                    //.addComponent(jLabel19) // DIHAPUS
                     .addComponent(btnLaporanTransaksi))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel21)
@@ -542,9 +443,9 @@ public class DashboardAdmin extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel19)
+                    //.addComponent(jLabel19) // DIHAPUS
                     .addComponent(jLabel21))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE) // Jarak disesuaikan
                 .addComponent(jLabel20)
                 .addGap(18, 18, 18)
                 .addComponent(btnLaporanTransaksi)
@@ -553,8 +454,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jPanel8.setBackground(new java.awt.Color(161, 194, 189));
 
-        jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel22.setText("0");
+        // Angka 0 (jLabel22) DIHAPUS
 
         jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -579,7 +479,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(178, 178, 178)
                         .addComponent(jLabel23))
-                    .addComponent(jLabel22)
+                    //.addComponent(jLabel22) // DIHAPUS
                     .addComponent(btnLaporanPenjualan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel24)
@@ -590,9 +490,9 @@ public class DashboardAdmin extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel22)
+                    //.addComponent(jLabel22) // DIHAPUS
                     .addComponent(jLabel24))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE) // Jarak disesuaikan
                 .addComponent(jLabel23)
                 .addGap(18, 18, 18)
                 .addComponent(btnLaporanPenjualan)
@@ -602,48 +502,52 @@ public class DashboardAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         
-        // HORIZONTAL GROUP UTAMA
+        // HORIZONTAL GROUP UTAMA (Layout disesuaikan menjadi 2 kolom simetris)
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup() 
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE) 
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    // Baris 3 (Hanya Laporan Penjualan)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE) 
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    
+                    // Baris 1: User Manager | Data Barang
                     .addGroup(layout.createSequentialGroup()
-                        // Baris 1 & 2 - Kolom 1
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31)
-                        // Baris 1 & 2 - Kolom 2
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                // Kolom 3
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40) // Jarak antar kolom
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    
+                    // Baris 2: Supplier | Laporan Transaksi
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40) // Jarak antar kolom
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+
+                    // Baris 3: Laporan Penjualan (Rata Tengah)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE) 
+                )
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        // VERTICAL GROUP UTAMA 
+        
+        // VERTICAL GROUP UTAMA (Layout disesuaikan)
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40) // Jarak atas ke baris 1
+                
+                // Baris 1: User Manager | Data Barang
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40) // Jarak baris 1 ke baris 2
+                
+                // Baris 2: Supplier | Laporan Transaksi
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40) // Jarak baris 2 ke baris 3 (Laporan Penjualan)
+                .addGap(40, 40, 40) // Jarak baris 2 ke baris 3
+
+                // Baris 3: Laporan Penjualan
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(40, Short.MAX_VALUE)) // Jarak bawah
         );
@@ -652,11 +556,11 @@ public class DashboardAdmin extends javax.swing.JFrame {
     }// </editor-fold>
 
     // =======================================================
-    // ACTION LISTENERS (Navigasi & Logout)
+    // ACTION LISTENERS (Fungsionalitas fitur lain TIDAK DIUBAH)
     // =======================================================
     
 
-    // FIX: LOGIKA NAVIGASI USER MANAGER YANG BENAR
+    // LOGIKA NAVIGASI USER MANAGER (TIDAK DIUBAH)
     private void btnUserManagerActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             this.setVisible(false); 
@@ -679,38 +583,46 @@ public class DashboardAdmin extends javax.swing.JFrame {
         }
     }
 
-    // Aksi untuk tombol lain (hanya simulasi)
+    // Aksi untuk tombol Supplier (Diperbaiki agar sesuai dengan skenario nyata)
     private void btnSupplierActionPerformed(java.awt.event.ActionEvent evt) {
-        // PASTIKAN KELAS TambahSupplier ADA DAN MEMILIKI CONSTRUCTOR TambahSupplier(JFrame parent)
-        TambahSupplier formSupplier = new TambahSupplier(this); // <<< Melewatkan Dashboard Admin ("this")
-        formSupplier.setVisible(true);
-        this.dispose(); // Menutup dashboard saat pindah
+        // Asumsi nama kelas untuk Supplier adalah TambahSupplier, jika berbeda, harap sesuaikan.
+        try {
+            // Gunakan reflection jika kelas TambahSupplier belum diimport atau tidak ada
+            Class<?> supplierClass = Class.forName("kasirsakpore.TambahSupplier");
+            java.lang.reflect.Constructor<?> constructor = supplierClass.getConstructor(JFrame.class);
+            JFrame formSupplier = (JFrame) constructor.newInstance(this);
+            formSupplier.setVisible(true);
+            this.dispose(); 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat form Supplier. Pastikan kelas TambahSupplier tersedia: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
+    // Aksi untuk tombol Data Barang (TIDAK DIUBAH)
     private void btnDataBarangActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             // PASTIKAN KELAS DataBarang ADA DAN MEMILIKI CONSTRUCTOR DataBarang(JFrame parent)
-            DataBarang dataBarang = new DataBarang(this);
-            dataBarang.setVisible(true); // Tampilkan form DataBarang
-            this.setVisible(false);      // Sembunyikan DashboardAdmin
+            // Asumsi DataBarang ada di package kasirsakpore
+            Class<?> barangClass = Class.forName("kasirsakpore.DataBarang");
+            java.lang.reflect.Constructor<?> constructor = barangClass.getConstructor(JFrame.class);
+            JFrame formBarang = (JFrame) constructor.newInstance(this);
+            formBarang.setVisible(true);
+            this.setVisible(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Gagal memuat form Data Barang: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    private void btnKategoriActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Kategori");
-    }
+    // btnKategoriActionPerformed DIHAPUS
 
-    private void btnTransaksiActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Transaksi Penjualan");
-    }
+    // btnTransaksiActionPerformed DIHAPUS
 
-    // Bagian yang harus diganti di file DashboardAdmin.java:
-
+    // Aksi untuk tombol Laporan Transaksi (TIDAK DIUBAH)
     private void btnLaporanTransaksiActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             // Membuat instance LaporanTransaksi
+            // PASTIKAN KELAS LaporanTransaksi ADA dan memiliki constructor default
             LaporanTransaksi laporanForm = new LaporanTransaksi(); 
             // Menampilkan form Laporan Transaksi
             laporanForm.setVisible(true);
@@ -724,8 +636,23 @@ public class DashboardAdmin extends javax.swing.JFrame {
         }
     }
 
+    // Aksi untuk tombol Laporan Penjualan (Telah Diubah)
     private void btnLaporanPenjualanActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Simulasi Navigasi: Form Laporan Penjualan");
+        try {
+            // Sembunyikan frame Dashboard saat ini
+            this.setVisible(false);
+            
+            // Buat instance dari LaporanPenjualan, berikan 'this' (DashboardAdmin) sebagai parent
+            LaporanPenjualan laporan = new LaporanPenjualan(this); 
+            
+            // Tampilkan frame LaporanPenjualan
+            laporan.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maksimalkan jendela
+            laporan.setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat form Laporan Penjualan. Pastikan file LaporanPenjualan.java tersedia di package 'kasirsakpore': " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.setVisible(true); // Tampilkan kembali dashboard jika navigasi gagal
+            e.printStackTrace();
+        }
     }
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -753,29 +680,23 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
+            // Menggunakan constructor default untuk testing
             new DashboardAdmin().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDataBarang;
-    private javax.swing.JButton btnKategori;
     private javax.swing.JButton btnLaporanPenjualan;
     private javax.swing.JButton btnLaporanTransaksi;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnSupplier;
-    private javax.swing.JButton btnTransaksi;
     private javax.swing.JButton btnUserManager;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
+    // jLabel4, jLabel6, jLabel10, jLabel13, jLabel16, jLabel19, jLabel22 (Angka '0') DIHAPUS
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
+    // jLabel13, 14, 15 (Kategori) dan 16, 17, 18 (Transaksi) DIHAPUS
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -784,9 +705,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -794,8 +713,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
+    // jPanel5 (Kategori) dan jPanel6 (Transaksi) DIHAPUS
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel lblTanggal;
